@@ -1,0 +1,55 @@
+#define BLYNK_TEMPLATE_ID "TMPL8exwnkQi"
+#define BLYNK_DEVICE_NAME "sensor data publish"
+#define BLYNK_AUTH_TOKEN "qSfVTm7xAvZ8cvGrwFjVg1vENozMN0hC"
+
+#define BLYNK_PRINT Serial
+
+#include <ESP8266WiFi.h>
+#include <BlynkSimpleEsp8266.h>
+#include <DHT.h>
+
+// WiFi credentials
+char auth[] = BLYNK_AUTH_TOKEN;
+char ssid[] = "bandhu@PC";
+char pass[] = "JoyNetai@67";
+
+// DHT Sensor setup
+#define DHTPIN D3         // GPIO pin connected to the DHT sensor
+#define DHTTYPE DHT11     // Define sensor type: DHT11 or DHT22
+DHT dht(DHTPIN, DHTTYPE);
+
+BlynkTimer timer; // Create a timer object
+
+// Function to send sensor data to Blynk
+void sendSensorData() {
+  float temperature = dht.readTemperature();
+  float humidity = dht.readHumidity();
+
+  // Check if any reads failed
+  if (isnan(temperature) || isnan(humidity)) {
+    Serial.println("Failed to read from DHT sensor!");
+    return;
+  }
+
+  Serial.print("Temperature: ");
+  Serial.println(temperature);
+  Serial.print("Humidity: ");
+  Serial.println(humidity);
+
+  Blynk.virtualWrite(V0, temperature);
+  Blynk.virtualWrite(V1, humidity);
+}
+
+void setup() {
+  Serial.begin(9600);
+  Blynk.begin(auth, ssid, pass);
+  dht.begin();
+
+  // Setup a function to be called every 15 seconds
+  timer.setInterval(15000L, sendSensorData);
+}
+
+void loop() {
+  Blynk.run();
+  timer.run(); // Run the timer
+}
