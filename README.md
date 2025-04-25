@@ -1,38 +1,17 @@
 # Measure-Humidity-and-Temperature-using-DHT11
-#define BLYNK_TEMPLATE_ID "TMPL8exwnkQi"
-#define BLYNK_DEVICE_NAME "sensor data publish"
-#define BLYNK_AUTH_TOKEN "qSfVTm7xAvZ8cvGrwFjVg1vENozMN0hC"
 
+DHT11 Temperature & Humidity Monitoring with Blynk IoT
 
-#define BLYNK_PRINT Serial
-#include <ESP8266WiFi.h>
-#include <BlynkSimpleEsp8266.h>
-#include <DHT.h>
+This project reads temperature and humidity data using a DHT11 sensor connected to an ESP8266 (NodeMCU) and sends the data to the Blynk IoT platform in real-time.
 
-char auth[] = BLYNK_AUTH_TOKEN;
+Components Used: 1.ESP8266 NodeMCU 2.DHT11 Temperature & Humidity Sensor 3.Wi-Fi connection 4.Blynk IoT App
 
-char ssid[] = "bandhu@PC";  // type your wifi name
-char pass[] = "JoyNetai@67";  // type your wifi password
+Features:     Measures temperature and humidity every 15 seconds
+              Displays live data on Blynk mobile dashboard (V0 → Temperature, V1 → Humidity)
+              Serial Monitor prints sensor values for debugging
 
-DHT dht;
-
-void setup(){
-Serial.begin(9600);
-Blynk.begin(auth, ssid, pass);
-dht.setup(D3);
-
-}
-void loop(){
-  
-float Temperature = dht.getTemperature();/* Get temperature value */
-float Humidity = dht.getHumidity();/* Get humidity value */
-
-Serial.println(Temperature);
-Serial.println(Humidity);
-
-  Blynk.virtualWrite(V1,Humidity );
-  Blynk.virtualWrite(V0,Temperature );
-
-delay(15000);
-  Blynk.run();
-  }
+How to Use:       1.Connect DHT11's VCC, GND, and DATA to NodeMCU (e.g., DATA → D3).
+                  2.Update Wi-Fi credentials and Blynk Auth Token in the code.
+                  3.Upload the code to NodeMCU using Arduino IDE.
+                  4.Open Blynk App, add two Value Display widgets (linked to V0 and V1).
+                  5.Power up and monitor your environment remotely!
